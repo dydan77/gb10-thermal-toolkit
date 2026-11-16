@@ -8,6 +8,8 @@ Type=simple
 ExecStart=/usr/local/bin/gpu-thermal-governor.sh
 Restart=always
 RestartSec=10
+# Belt and braces: reset clocks even if the script was killed before its EXIT trap ran.
+ExecStopPost=-/usr/bin/nvidia-smi -rgc
 
 [Install]
 WantedBy=multi-user.target

@@ -1,5 +1,13 @@
 # GB10 Thermal Toolkit
 
+> **Fork note (dydan77/dydan-fixes).** Changes from upstream `maci0/gb10-thermal-toolkit`:
+> - The governor restores stock clocks (`nvidia-smi -rgc`) on any exit; the systemd unit also runs it in `ExecStopPost`. Upstream kept the last cap, so stopping it at the floor left the GPU slow until reboot.
+> - A failed `nvidia-smi -lgc` is logged as a warning instead of being silently assumed applied.
+> - Earlier default band: step down at 88 C, up at 84 C, panic at 92 C (upstream 91/87/94). Measured on a Dell Pro Max GB10: board peaked at 93.1 C under sustained LLM load without tripping; the actual cutoff is undocumented.
+> - `deploy-docker.sh` no longer passes the unused `GPU_HI`/`GPU_LO` variables.
+>
+> Tested on a Dell Pro Max GB10: forced band steps the cap down (GPU 2411 -> 1462 MHz) and SIGTERM restores 2411 MHz.
+
 Thermal tooling for NVIDIA GB10 "DGX Spark"-class mini systems (NVIDIA Founders,
 **ASUS Ascent GX10**, MSI EdgeXpert, etc.). Some of these boxes hard power-off or
 throttle under sustained GPU load. This toolkit helps you find out *why* yours runs
